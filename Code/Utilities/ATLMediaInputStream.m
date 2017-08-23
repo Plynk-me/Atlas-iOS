@@ -811,11 +811,11 @@ static size_t ATLMediaInputStreamPutBytesIntoStreamCallback(void *assetStreamRef
     }
     
     // Copy the consumed data to `buffer`.
-    [self.dataConsumed getBytes:buffer length:bytesToConsume];
+    NSUInteger bytesConsumed = self.dataConsumed.length;
+    [self.dataConsumed getBytes:buffer length:bytesConsumed];
     ATLMediaInputStreamLog(@"input stream: passed data to receiver");
     
     // Clear transfer buffer.
-    NSInteger bytesConsumed = self.dataConsumed.length;
     self.dataConsumed = [NSData data];
     return bytesConsumed;
 }
