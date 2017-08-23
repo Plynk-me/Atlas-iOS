@@ -24,7 +24,7 @@
 #import "ATLIncomingMessageCollectionViewCell.h"
 #import "ATLOutgoingMessageCollectionViewCell.h"
 
-@import LayerKit;
+#import <LayerKit/LayerKit.h>
 
 
 NSString *const ATLGIFAccessibilityLabel = @"Message: GIF";
@@ -135,8 +135,6 @@ NSInteger const kATLSharedCellTag = 1000;
     self.accessibilityLabel = [NSString stringWithFormat:@"Message: %@", text];
 }
 
-
-// MARK: CPD updated this method to overcome issues wiht Atlas images in the wrong bubbles...
 - (void)configureBubbleViewForImageContent
 {
     self.accessibilityLabel = ATLImageAccessibilityLabel;
@@ -179,8 +177,7 @@ NSInteger const kATLSharedCellTag = 1000;
             size = ATLImageSizeForData(fullResImagePart.data); // Resort to image's size, if no dimensions metadata message parts found.
         }
         
-        
-        // Fall-back to programatically requesting for a content download of single message part messages (Android compatibillity).
+        // Fall-back to programatically requesting for a content download of single message part messages (Android compatibility).
         if ([[weakSelf.message valueForKeyPath:@"parts.MIMEType"] isEqual:@[ATLMIMETypeImageJPEG]]) {
             if (fullResImagePart && (fullResImagePart.transferStatus == LYRContentTransferReadyForDownload)) {
                 NSError *error;

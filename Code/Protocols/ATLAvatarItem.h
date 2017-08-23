@@ -17,11 +17,13 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //
+
+#import <LayerKit/LayerKit.h>
 #import <UIKit/UIKit.h>
 
 /**
  @abstract Objects conforming to the `ATLAvatarItem` protocol will be used to display images or
- initials in a `ATLAvatarImageView`.  The objects can return `nil` if they do not want to use the
+ initials in a `ATLAvatarView`.  The objects can return `nil` if they do not want to use the
  specific property.
  */
 @protocol ATLAvatarItem <NSObject>
@@ -41,11 +43,9 @@
  */
 @property (nonatomic, readonly, nullable) NSString *avatarInitials;
 
-@optional
 /**
- @abstract Returns the avatar image radius for display. 0 makes this the default circle.
+ @abstract Returns the presence status information.
  */
-@property (nonatomic, readonly) CGFloat avatarRadius;
-
+@property (nonatomic, readonly, assign) LYRIdentityPresenceStatus presenceStatus;
 
 @end
