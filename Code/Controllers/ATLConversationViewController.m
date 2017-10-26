@@ -785,8 +785,17 @@ static NSInteger const ATLPhotoActionSheet = 1000;
         // the image picker.
         NSURL *moviePath = [NSURL fileURLWithPath:(NSString *)[[info objectForKey:UIImagePickerControllerMediaURL] path]];
         mediaAttachment = [ATLMediaAttachment mediaAttachmentWithFileURL:moviePath thumbnailSize:ATLDefaultThumbnailSize];
+    } else if (@available(iOS 11.0, *)) {
+        if (info[UIImagePickerControllerImageURL]) {
+            // Photo taken or video recorded within the app.
+            mediaAttachment = [ATLMediaAttachment mediaAttachmentWithFileURL:info[UIImagePickerControllerImageURL] thumbnailSize:ATLDefaultThumbnailSize];
+        } else if (info[UIImagePickerControllerOriginalImage]) {
+            // Image picked from the image picker.
+            mediaAttachment = [ATLMediaAttachment mediaAttachmentWithImage:info[UIImagePickerControllerOriginalImage] metadata:info[UIImagePickerControllerMediaMetadata] thumbnailSize:ATLDefaultThumbnailSize];
+        } else {
+            return;
+        }
     } else if (info[UIImagePickerControllerReferenceURL]) {
-        // Photo taken or video recorded within the app.
         mediaAttachment = [ATLMediaAttachment mediaAttachmentWithAssetURL:info[UIImagePickerControllerReferenceURL] thumbnailSize:ATLDefaultThumbnailSize];
     } else if (info[UIImagePickerControllerOriginalImage]) {
         // Image picked from the image picker.
@@ -794,7 +803,7 @@ static NSInteger const ATLPhotoActionSheet = 1000;
     } else {
         return;
     }
-    
+
     if (mediaAttachment) {
         [self.messageInputToolbar insertMediaAttachment:mediaAttachment withEndLineBreak:YES];
     }
