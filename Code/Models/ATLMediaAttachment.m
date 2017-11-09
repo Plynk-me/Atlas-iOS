@@ -43,7 +43,7 @@ NSData *ATLMediaAttachmentDataFromInputStream(NSInputStream *inputStream);
 /**
  @abstract Generates a thumbnail from the desired video by taking a still
    snapshot from a frame located at the first second in the video.
- @param fileURL File path of the video asset in a form of an `NSURL`
+ @param videoFileURL File path of the video asset in a form of an `NSURL`
  @return Returns a thumbnail image in a form of an `NSUImage`; In case of a
    failure, function returns `nil`.
  */
@@ -51,12 +51,12 @@ UIImage *ATLMediaAttachmentGenerateThumbnailFromVideoFileURL(NSURL *videoFileURL
 
 /**
  @abstract Extracts the video orientation based on assetTtrack's affine transform.
- @param assetTrack The `AVAssetTrack` for which to extract the video orientation from.
+ @param assetVideoTrack The `AVAssetTrack` for which to extract the video orientation from.
  @return Orientation information in a form of `UIImageOrientation`.
  */
 UIImageOrientation ATLMediaAttachmentVideoOrientationForAVAssetTrack(AVAssetTrack *assetVideoTrack);
 
-static int const ATLMediaAttachmentTIFFOrientationToImageOrientationMap[9] = { 0, 0, 6, 1, 5, 4, 4, 7, 2 };
+static int const ATLMediaAttachmentTIFFOrientationToImageOrientationMap[9] = { 0, 0, 0, 1, 1, 2, 3, 3, 2 };
 static char const ATLMediaAttachmentAsyncToBlockingQueueName[] = "com.layer.Atlas.ATLMediaAttachment.blocking";
 static NSUInteger const ATLMediaAttachmentDataFromStreamBufferSize = 1024 * 1024;
 static float const ATLMediaAttachmentDefaultThumbnailJPEGCompression = 0.5f;
@@ -239,7 +239,7 @@ static float const ATLMediaAttachmentDefaultThumbnailJPEGCompression = 0.5f;
         if ((UTTypeConformsTo(fileUTI, kUTTypeVideo) || UTTypeConformsTo(fileUTI, kUTTypeQuickTimeMovie))) {
             thumbnailImage = ATLMediaAttachmentGenerateThumbnailFromVideoFileURL(fileURL);
         }
-        self.thumbnailInputStream = [ATLMediaInputStream mediaInputStreamWithImage:thumbnailImage metadata:nil];
+        self.thumbnailInputStream = (thumbnailImage != nil) ? [ATLMediaInputStream mediaInputStreamWithImage:thumbnailImage metadata:nil] : nil;
         self.thumbnailMIMEType = ATLMIMETypeImageJPEGPreview;
     }
     ((ATLMediaInputStream *)self.thumbnailInputStream).maximumSize = thumbnailSize;
